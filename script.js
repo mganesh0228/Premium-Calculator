@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
         currentOperand: '0',
         previousOperand: '',
         operation: undefined,
-        waitingForNewOperand: false
+        waitingForNewOperand: false,
+        history: []
     };
 
     // DOM elements
@@ -15,6 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const normalButtons = document.getElementById('normalButtons');
     const scientificButtons = document.getElementById('scientificButtons');
     const buttons = document.querySelectorAll('.button');
+    const historyPanel = document.getElementById('historyPanel');
+    const historyList = document.getElementById('historyList');
+    const historyToggle = document.getElementById('historyToggle');
+    const historyToggleSci = document.getElementById('historyToggleSci');
+    const clearHistoryBtn = document.getElementById('clearHistory');
+    const swipeIndicator = document.querySelector('.swipe-indicator');
 
     // Toggle between normal and scientific mode
     modeToggle.addEventListener('click', function() {
@@ -35,6 +42,23 @@ document.addEventListener('DOMContentLoaded', function() {
             modeToggle.style.background = 'rgba(255, 255, 255, 0.3)';
             document.querySelector('.toggle-slider').style.left = '3px';
         }
+    });
+
+    // Toggle history panel
+    historyToggle.addEventListener('click', toggleHistory);
+    historyToggleSci.addEventListener('click', toggleHistory);
+    
+    function toggleHistory() {
+        historyPanel.classList.toggle('active');
+        if (window.innerWidth <= 768) {
+            swipeIndicator.style.display = historyPanel.classList.contains('active') ? 'none' : 'block';
+        }
+    }
+
+    // Clear history
+    clearHistoryBtn.addEventListener('click', function() {
+        calculator.history = [];
+        updateHistoryDisplay();
     });
 
     // Add button press animation
@@ -97,13 +121,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 computation = prev * current;
                 break;
             case '÷':
-                computation = prev / current;
+                if (current === 0) {
+                    computation = 'Error';
+                } else {
+                    computation = prev / current;
+                }
                 break;
             case '^':
                 computation = Math.pow(prev, current);
                 break;
             default:
                 return;
+        }
+        
+        // Add to history
+        if (computation !== 'Error') {
+            const historyItem = {
+                expression: `${calculator.previousOperand} ${calculator.currentOperand}`,
+                result: computation.toString()
+            };
+            
+            calculator.history.unshift(historyItem);
+            if (calculator.history.length > 10) {
+                calculator.history.pop();
+            }
+            
+            updateHistoryDisplay();
         }
         
         calculator.currentOperand = computation.toString();
@@ -150,56 +193,121 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (isNaN(current)) return;
         
+        let result;
+        let expression = '';
+        
         switch (func) {
             case 'sin':
-                calculator.currentOperand = Math.sin(current * Math.PI / 180).toString();
+                result = Math.sin(current * Math.PI / 180);
+                expression = `sin(${current})`;
                 break;
             case 'cos':
-                calculator.currentOperand = Math.cos(current * Math.PI / 180).toString();
+                result = Math.cos(current * Math.PI / 180);
+                expression = `cos(${current})`;
                 break;
             case 'tan':
-                calculator.currentOperand = Math.tan(current * Math.PI / 180).toString();
+                result = Math.tan(current * Math.PI / 180);
+                expression = `tan(${current})`;
                 break;
             case 'log':
-                calculator.currentOperand = Math.log10(current).toString();
+                if (current <= 0) {
+                    result = 'Error';
+                } else {
+                    result = Math.log10(current);
+                    expression = `log(${current})`;
+                }
                 break;
             case 'ln':
-                calculator.currentOperand = Math.log(current).toString();
+                if (current <= 0) {
+                    result = 'Error';
+                } else {
+                    result = Math.log(current);
+                    expression = `ln(${current})`;
+                }
                 break;
             case 'sqrt':
-                calculator.currentOperand = Math.sqrt(current).toString();
+                if (current < 0) {
+                    result = 'Error';
+                } else {
+                    result = Math.sqrt(current);
+                    expression = `√(${current})`;
+                }
                 break;
             case 'power':
                 if (value === '2') {
-                    calculator.currentOperand = Math.pow(current, 2).toString();
+                    result = Math.pow(current, 2);
+                    expression = `${current}²`;
                 } else if (value === '3') {
-                    calculator.currentOperand = Math.pow(current, 3).toString();
+                    result = Math.pow(current, 3);
+                    expression = `${current}³`;
                 } else if (value === 'y') {
                     calculator.previousOperand = `${calculator.currentOperand} ^`;
                     calculator.operation = '^';
                     calculator.waitingForNewOperand = true;
+                    return;
                 }
                 break;
             case 'factorial':
-                if (current < 0 || !Number.isInteger(current)) {
-                    calculator.currentOperand = 'Error';
+                if (current < 0 || !Number.isInteger(current) || current > 100) {
+                    result = 'Error';
                 } else {
-                    let result = 1;
+                    result = 1;
                     for (let i = 2; i <= current; i++) {
                         result *= i;
                     }
-                    calculator.currentOperand = result.toString();
+                    expression = `${current}!`;
                 }
                 break;
             case 'pi':
                 calculator.currentOperand = Math.PI.toString();
-                break;
+                return;
             case 'e':
                 calculator.currentOperand = Math.E.toString();
-                break;
+                return;
         }
         
+        // Add to history
+        if (expression && result !== 'Error') {
+            const historyItem = {
+                expression: expression,
+                result: result.toString()
+            };
+            
+            calculator.history.unshift(historyItem);
+            if (calculator.history.length > 10) {
+                calculator.history.pop();
+            }
+            
+            updateHistoryDisplay();
+        }
+        
+        calculator.currentOperand = result.toString();
         calculator.waitingForNewOperand = true;
+    }
+
+    // Update history display
+    function updateHistoryDisplay() {
+        if (calculator.history.length === 0) {
+            historyList.innerHTML = '<div class="history-empty">No calculations yet</div>';
+            return;
+        }
+        
+        historyList.innerHTML = '';
+        calculator.history.forEach(item => {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'history-item';
+            historyItem.innerHTML = `
+                <div class="history-expression">${item.expression}</div>
+                <div class="history-result">= ${item.result}</div>
+            `;
+            
+            historyItem.addEventListener('click', function() {
+                calculator.currentOperand = item.result;
+                updateDisplay();
+            });
+            
+            historyList.appendChild(historyItem);
+        });
     }
 
     // Event listeners for buttons
@@ -278,9 +386,48 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (event.key === 'Backspace') {
             deleteLastDigit();
             updateDisplay();
+        } else if (event.key === 'h' || event.key === 'H') {
+            toggleHistory();
         }
     });
 
+    // Swipe functionality for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', e => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+    
+    document.addEventListener('touchend', e => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+    
+    function handleSwipe() {
+        const swipeThreshold = 50;
+        
+        if (touchEndX < touchStartX - swipeThreshold) {
+            // Swipe left - close history
+            if (historyPanel.classList.contains('active')) {
+                historyPanel.classList.remove('active');
+                swipeIndicator.style.display = 'block';
+            }
+        } else if (touchEndX > touchStartX + swipeThreshold) {
+            // Swipe right - open history
+            if (!historyPanel.classList.contains('active')) {
+                historyPanel.classList.add('active');
+                swipeIndicator.style.display = 'none';
+            }
+        }
+    }
+
     // Initialize display
     updateDisplay();
+    updateHistoryDisplay();
+    
+    // Show swipe indicator on mobile
+    if (window.innerWidth <= 768) {
+        swipeIndicator.style.display = 'block';
+    }
 });

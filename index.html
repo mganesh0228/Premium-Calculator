@@ -3,95 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Calculator</title>
+    <title>Ganesh Light - Premium Calculator</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="script" href="script.js">
 </head>
 <body>
     <div class="calculator-container">
-        <div class="calculator-header">
-            <div class="calculator-title">Premium Calculator</div>
-            <div class="mode-control">
-                <div class="mode-toggle" id="modeToggle">
-                    <div class="toggle-slider"></div>
+        <div class="calculator-main">
+            <div class="calculator-header">
+                <div class="calculator-title">Ganesh Light Calculator</div>
+                <div class="mode-control">
+                    <div class="mode-toggle" id="modeToggle">
+                        <div class="toggle-slider"></div>
+                    </div>
+                    <div class="mode-text">Normal</div>
                 </div>
-                <div class="mode-text">Normal</div>
             </div>
-        </div>
-        
-        <div class="display-container">
-            <div class="display">
-                <div class="previous-operand" id="previousOperand"></div>
-                <div class="current-operand" id="currentOperand">0</div>
+            
+            <div class="display-container">
+                <div class="display">
+                    <div class="previous-operand" id="previousOperand"></div>
+                    <div class="current-operand" id="currentOperand">0</div>
+                </div>
             </div>
+            
+            <div class="buttons-container" id="normalButtons">
+                <button class="button clear span-two" data-action="clear">AC</button>
+                <button class="button delete" data-action="delete">DEL</button>
+                <button class="button operator" data-operation="÷">÷</button>
+                
+                <button class="button number" data-number="7">7</button>
+                <button class="button number" data-number="8">8</button>
+                <button class="button number" data-number="9">9</button>
+                <button class="button operator" data-operation="×">×</button>
+                
+                <button class="button number" data-number="4">4</button>
+                <button class="button number" data-number="5">5</button>
+                <button class="button number" data-number="6">6</button>
+                <button class="button operator" data-operation="-">-</button>
+                
+                <button class="button number" data-number="1">1</button>
+                <button class="button number" data-number="2">2</button>
+                <button class="button number" data-number="3">3</button>
+                <button class="button operator" data-operation="+">+</button>
+                
+                <button class="button number span-two" data-number="0">0</button>
+                <button class="button number" data-number=".">.</button>
+                <button class="button equals" data-action="calculate">=</button>
+                
+                <button class="button history-button span-two" id="historyToggle">History</button>
+            </div>
+            
+            <div class="buttons-container scientific-buttons hidden" id="scientificButtons">
+                <button class="button scientific-button" data-function="sin">sin</button>
+                <button class="button scientific-button" data-function="cos">cos</button>
+                <button class="button scientific-button" data-function="tan">tan</button>
+                <button class="button scientific-button" data-function="log">log</button>
+                <button class="button scientific-button" data-function="ln">ln</button>
+                
+                <button class="button scientific-button" data-function="sqrt">√</button>
+                <button class="button scientific-button" data-function="power" data-value="2">x²</button>
+                <button class="button scientific-button" data-function="power" data-value="3">x³</button>
+                <button class="button scientific-button" data-function="power" data-value="y">x^y</button>
+                <button class="button scientific-button" data-function="factorial">x!</button>
+                
+                <button class="button scientific-button" data-function="pi">π</button>
+                <button class="button scientific-button" data-function="e">e</button>
+                <button class="button clear" data-action="clear">AC</button>
+                <button class="button delete" data-action="delete">DEL</button>
+                <button class="button operator" data-operation="÷">÷</button>
+                
+                <button class="button number" data-number="7">7</button>
+                <button class="button number" data-number="8">8</button>
+                <button class="button number" data-number="9">9</button>
+                <button class="button operator" data-operation="×">×</button>
+                
+                <button class="button number" data-number="4">4</button>
+                <button class="button number" data-number="5">5</button>
+                <button class="button number" data-number="6">6</button>
+                <button class="button operator" data-operation="-">-</button>
+                
+                <button class="button number" data-number="1">1</button>
+                <button class="button number" data-number="2">2</button>
+                <button class="button number" data-number="3">3</button>
+                <button class="button operator" data-operation="+">+</button>
+                
+                <button class="button number span-two" data-number="0">0</button>
+                <button class="button number" data-number=".">.</button>
+                <button class="button equals" data-action="calculate">=</button>
+                
+                <button class="button history-button span-two" id="historyToggleSci">History</button>
+            </div>
+            
+            <div class="creator">
+                Created by <span>Ganesh Light</span>
+            </div>
+            
+            <div class="swipe-indicator">➔</div>
         </div>
         
-        <div class="buttons-container" id="normalButtons">
-            <button class="button clear span-two" data-action="clear">AC</button>
-            <button class="button delete" data-action="delete">DEL</button>
-            <button class="button operator" data-operation="÷">÷</button>
-            
-            <button class="button number" data-number="7">7</button>
-            <button class="button number" data-number="8">8</button>
-            <button class="button number" data-number="9">9</button>
-            <button class="button operator" data-operation="×">×</button>
-            
-            <button class="button number" data-number="4">4</button>
-            <button class="button number" data-number="5">5</button>
-            <button class="button number" data-number="6">6</button>
-            <button class="button operator" data-operation="-">-</button>
-            
-            <button class="button number" data-number="1">1</button>
-            <button class="button number" data-number="2">2</button>
-            <button class="button number" data-number="3">3</button>
-            <button class="button operator" data-operation="+">+</button>
-            
-            <button class="button number span-two" data-number="0">0</button>
-            <button class="button number" data-number=".">.</button>
-            <button class="button equals" data-action="calculate">=</button>
-        </div>
-        
-        <div class="buttons-container scientific-buttons hidden" id="scientificButtons">
-            <button class="button scientific-button" data-function="sin">sin</button>
-            <button class="button scientific-button" data-function="cos">cos</button>
-            <button class="button scientific-button" data-function="tan">tan</button>
-            <button class="button scientific-button" data-function="log">log</button>
-            <button class="button scientific-button" data-function="ln">ln</button>
-            
-            <button class="button scientific-button" data-function="sqrt">√</button>
-            <button class="button scientific-button" data-function="power" data-value="2">x²</button>
-            <button class="button scientific-button" data-function="power" data-value="3">x³</button>
-            <button class="button scientific-button" data-function="power" data-value="y">x^y</button>
-            <button class="button scientific-button" data-function="factorial">x!</button>
-            
-            <button class="button scientific-button" data-function="pi">π</button>
-            <button class="button scientific-button" data-function="e">e</button>
-            <button class="button clear" data-action="clear">AC</button>
-            <button class="button delete" data-action="delete">DEL</button>
-            <button class="button operator" data-operation="÷">÷</button>
-            
-            <button class="button number" data-number="7">7</button>
-            <button class="button number" data-number="8">8</button>
-            <button class="button number" data-number="9">9</button>
-            <button class="button operator" data-operation="×">×</button>
-            
-            <button class="button number" data-number="4">4</button>
-            <button class="button number" data-number="5">5</button>
-            <button class="button number" data-number="6">6</button>
-            <button class="button operator" data-operation="-">-</button>
-            
-            <button class="button number" data-number="1">1</button>
-            <button class="button number" data-number="2">2</button>
-            <button class="button number" data-number="3">3</button>
-            <button class="button operator" data-operation="+">+</button>
-            
-            <button class="button number span-two" data-number="0">0</button>
-            <button class="button number" data-number=".">.</button>
-            <button class="button equals" data-action="calculate">=</button>
-        </div>
-        
-        <div class="creator">
-            Created by <span>Ganesh</span>
+        <div class="history-panel" id="historyPanel">
+            <div class="history-header">
+                <div class="history-title">Calculation History</div>
+                <button class="history-clear" id="clearHistory">Clear</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <div class="history-empty">No calculations yet</div>
+            </div>
         </div>
     </div>
 
